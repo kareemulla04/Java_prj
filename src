@@ -1,0 +1,139 @@
+import java.util.Scanner;
+
+// Base class
+class CarShowroom {
+    String companyName;
+}
+
+// Derived class for company selection
+class Company extends CarShowroom {
+    public void selectCompany() {
+        System.out.println("Available Companies: ");
+        System.out.println("1. Honda");
+        System.out.println("2. Toyota");
+        System.out.println("3. Hyundai");
+    }
+}
+
+// Further derived class for model and price calculation
+class Model extends Company {
+    String modelName;
+    double basePrice;
+    double totalPrice;
+
+    void chooseModel(int companyOption, int modelOption) {
+        // Demo car models; you can expand this
+        if (companyOption == 1) { // Honda
+            companyName = "Honda";
+            if (modelOption == 1) {
+                modelName = "City";
+                basePrice = 1000000;
+            } else if (modelOption == 2) {
+                modelName = "Civic";
+                basePrice = 1500000;
+            } else {
+                modelName = "Unknown";
+                basePrice = 0;
+            }
+        } else if (companyOption == 2) { // Toyota
+            companyName = "Toyota";
+            if (modelOption == 1) {
+                modelName = "Corolla";
+                basePrice = 1200000;
+            } else if (modelOption == 2) {
+                modelName = "Fortuner";
+                basePrice = 3000000;
+            } else {
+                modelName = "Unknown";
+                basePrice = 0;
+            }
+        } else if (companyOption == 3) { // Hyundai
+            companyName = "Hyundai";
+            if (modelOption == 1) {
+                modelName = "i20";
+                basePrice = 700000;
+            } else if (modelOption == 2) {
+                modelName = "Creta";
+                basePrice = 1300000;
+            } else {
+                modelName = "Unknown";
+                basePrice = 0;
+            }
+        } else {
+            companyName = "Unknown";
+            modelName = "Unknown";
+            basePrice = 0;
+        }
+    }
+
+    void calculateTotal(boolean applyCGST, boolean applySGST, boolean applyInsurance) {
+        totalPrice = basePrice;
+        if (applyCGST) {
+            totalPrice += basePrice * 0.09; // CGST 9%
+        }
+        if (applySGST) {
+            totalPrice += basePrice * 0.09; // SGST 9%
+        }
+        if (applyInsurance) {
+            totalPrice += basePrice * 0.045; // Insurance 4.5%
+        }
+    }
+
+    void displaySummary() {
+        System.out.println("\n--- Purchase Summary ---");
+        System.out.println("Company: " + companyName);
+        System.out.println("Model: " + modelName);
+        System.out.println("Base Price: ₹" + basePrice);
+        System.out.println("Total On-road Price: ₹" + totalPrice);
+    }
+}
+
+// Main class
+public class CarShowroomApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Model showroom = new Model();
+
+        showroom.selectCompany();
+        System.out.print("Select company (1-3): ");
+        int comp = sc.nextInt();
+
+        String[] models;
+        if (comp == 1) {
+            models = new String[]{"City", "Civic"};
+        } else if (comp == 2) {
+            models = new String[]{"Corolla", "Fortuner"};
+        } else if (comp == 3) {
+            models = new String[]{"i20", "Creta"};
+        } else {
+            models = new String[]{};
+        }
+
+        if (models.length == 0) {
+            System.out.println("Invalid company chosen!");
+            return;
+        }
+
+        System.out.println("Available Models: ");
+        for (int i = 0; i < models.length; i++) {
+            System.out.println((i + 1) + ". " + models[i]);
+        }
+        System.out.print("Select model (1-" + models.length + "): ");
+        int modelOption = sc.nextInt();
+
+        showroom.chooseModel(comp, modelOption);
+
+        // Charges
+        System.out.print("Apply CGST (y/n)? ");
+        boolean cgst = sc.next().equalsIgnoreCase("y");
+        System.out.print("Apply SGST (y/n)? ");
+        boolean sgst = sc.next().equalsIgnoreCase("y");
+        System.out.print("Apply Insurance (y/n)? ");
+        boolean insurance = sc.next().equalsIgnoreCase("y");
+
+        showroom.calculateTotal(cgst, sgst, insurance);
+        showroom.displaySummary();
+
+        sc.close();
+    }
+}
